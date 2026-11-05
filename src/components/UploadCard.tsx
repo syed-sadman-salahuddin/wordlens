@@ -2,10 +2,17 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { AlertCircle, FileText, Loader2, Upload } from "lucide-react";
+import { AlertCircle, FileText, Loader2, UploadCloud } from "lucide-react";
 import { ACCEPT, MAX_MB, extractPages } from "@/lib/extract";
 import { analyze } from "@/lib/words/findUncommon";
 import { useAnalysis } from "@/context/AnalysisContext";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export default function UploadCard() {
   const router = useRouter();
@@ -37,70 +44,102 @@ export default function UploadCard() {
   }
 
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold">
-        <FileText className="h-5 w-5 text-indigo-600" />
-        Upload
-      </h2>
+    <Card className="overflow-hidden rounded-3xl border-border/80 bg-card/90 shadow-lg shadow-slate-900/[0.03]">
+      <CardHeader className="pb-5">
+        <div className="flex items-start gap-3">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+            <FileText className="h-5 w-5" />
+          </div>
+          <div className="space-y-1">
+            <CardTitle className="text-lg">Upload a document</CardTitle>
+            <CardDescription>Find useful words in a file you already have.</CardDescription>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div
+          onClick={() => !busy && inputRef.current?.click()}
+          onDragOver={(e) => {
+            e.preventDefault();
+            setDrag(true);
+          }}
+          onDragLeave={() => setDrag(false)}
+          onDrop={(e) => {
+            e.preventDefault();
+            setDrag(false);
+            handle(e.dataTransfer.files[0]);
+          }}
+          className={`flex h-64 cursor-pointer flex-col items-center justify-center gap-4 rounded-2xl border-2 border-dashed transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
+            drag
+              ? "border-primary bg-accent/70"
+              : "border-border bg-background/70 hover:border-primary/40 hover:bg-accent/40"
+          }`}
+          role="button"
+          tabIndex={0}
+          aria-label="Choose a PDF, DOC or DOCX file"
+          onKeyDown={(e) => {
+            if ((e.key === "Enter" || e.key === " ") && !busy) {
+              e.preventDefault();
+              inputRef.current?.click();
+            }
+          }}
+        >
+          {busy ? (
+            <>
+              <Loader2 className="h-9 w-9 animate-spin text-primary" />
+              <p className="text-sm font-medium text-foreground">Preparing your document…</p>
+              <div className="h-1.5 w-48 overflow-hidden rounded-full bg-muted">
+                <div
+                  className="h-full rounded-full bg-primary transition-all"
+                  style={{ width: `${Math.max(progress, 5)}%` }}
+                />
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+                <UploadCloud className="h-7 w-7" />
+              </div>
+              <div className="text-center">
+                <p className="font-medium">Drop your file here</p>
+                <p className="mt-1 text-sm text-muted-foreground">or click to browse your device</p>
+              </div>
+              <div className="flex flex-wrap justify-center gap-2">
+                {["PDF", "DOC", "DOCX"].map((format) => (
+                  <span
+                    key={format}
+                    className="rounded-md border border-border bg-card px-2 py-1 text-xs font-medium text-muted-foreground"
+                  >
+                    {format}
+                  </span>
+                ))}
+                <span className="rounded-md border border-border bg-card px-2 py-1 text-xs text-muted-foreground">
+                  Up to {MAX_MB} MB
+                </span>
+              </div>
+            </>
+          )}
+        </div>
 
-      <div
-        onClick={() => !busy && inputRef.current?.click()}
-        onDragOver={(e) => {
-          e.preventDefault();
-          setDrag(true);
-        }}
-        onDragLeave={() => setDrag(false)}
-        onDrop={(e) => {
-          e.preventDefault();
-          setDrag(false);
-          handle(e.dataTransfer.files[0]);
-        }}
-        className={`flex h-72 cursor-pointer flex-col items-center justify-center gap-4 rounded-2xl border-2 border-dashed transition ${
-          drag
-            ? "border-indigo-500 bg-indigo-50"
-            : "border-slate-200 hover:border-indigo-300 hover:bg-slate-50"
-        }`}
-      >
-        {busy ? (
-          <>
-            <Loader2 className="h-10 w-10 animate-spin text-indigo-600" />
-            <div className="h-1.5 w-48 overflow-hidden rounded-full bg-slate-200">
-              <div
-                className="h-full rounded-full bg-indigo-600 transition-all"
-                style={{ width: `${Math.max(progress, 5)}%` }}
-              />
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-50">
-              <Upload className="h-7 w-7 text-indigo-600" />
-            </div>
-            <div className="text-center">
-              <p className="font-medium">Drop a file or click</p>
-              <p className="mt-1 text-sm text-slate-400">PDF, DOC, DOCX</p>
-            </div>
-          </>
+        <input
+          ref={inputRef}
+          type="file"
+          accept={ACCEPT}
+          className="sr-only"
+          tabIndex={-1}
+          onChange={(e) => {
+            handle(e.target.files?.[0]);
+            e.target.value = "";
+          }}
+        />
+
+        {error && (
+          <p className="mt-4 flex items-center gap-2 text-sm text-destructive">
+            <AlertCircle className="h-4 w-4" />
+            {error}
+          </p>
         )}
-      </div>
-
-      <input
-        ref={inputRef}
-        type="file"
-        accept={ACCEPT}
-        className="hidden"
-        onChange={(e) => {
-          handle(e.target.files?.[0]);
-          e.target.value = "";
-        }}
-      />
-
-      {error && (
-        <p className="mt-4 flex items-center gap-2 text-sm text-red-600">
-          <AlertCircle className="h-4 w-4" />
-          {error}
-        </p>
-      )}
-    </div>
+      </CardContent>
+    </Card>
   );
 }

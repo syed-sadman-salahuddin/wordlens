@@ -8,4 +8,13 @@ export type Analysis = {
   fileName: string;
   pages: PageData[];
   words: WordEntry[];
+  savedId?: string;
+};
+
+export type Meaning = { partOfSpeech: string; definition: string };
+
+export type Definition = {
+  phonetic: string;
+  meanings: Meaning[];
+  synonyms: string[];
 };

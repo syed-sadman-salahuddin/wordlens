@@ -15,16 +15,30 @@ export default function PageViewer({ page, unlocked, selected, onSelect }: Props
     parts.push(page.text.slice(cursor, m.start));
     const open = unlocked.has(m.word);
     const style = !open
-      ? "bg-slate-200 text-slate-500 cursor-default"
+      ? "bg-muted text-muted-foreground cursor-default"
       : selected === m.word
-      ? "bg-amber-400 text-slate-900 cursor-pointer"
-      : "bg-amber-200 text-slate-900 hover:bg-amber-300 cursor-pointer";
+      ? "bg-primary text-primary-foreground cursor-pointer"
+      : "bg-primary/10 text-primary hover:bg-primary/20 cursor-pointer";
 
     parts.push(
       <mark
         key={i}
+        role={open ? "button" : undefined}
+        tabIndex={open ? 0 : undefined}
+        aria-label={open ? `Explore ${m.word}` : undefined}
+        aria-pressed={open ? selected === m.word : undefined}
         onClick={open ? () => onSelect(m.word) : undefined}
-        className={`rounded px-0.5 transition ${style}`}
+        onKeyDown={
+          open
+            ? (event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  onSelect(m.word);
+                }
+              }
+            : undefined
+        }
+        className={`rounded px-0.5 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${style}`}
       >
         {page.text.slice(m.start, m.end)}
       </mark>
@@ -34,7 +48,7 @@ export default function PageViewer({ page, unlocked, selected, onSelect }: Props
   parts.push(page.text.slice(cursor));
 
   return (
-    <article className="whitespace-pre-wrap break-words rounded-2xl border border-slate-200 bg-white p-6 text-[15px] leading-8 text-slate-700 shadow-sm sm:p-10">
+    <article className="whitespace-pre-wrap break-words rounded-2xl border border-border/80 bg-card p-6 text-[15px] leading-8 text-foreground shadow-sm sm:p-10">
       {parts}
     </article>
   );

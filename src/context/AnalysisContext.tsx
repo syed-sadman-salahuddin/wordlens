@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import type { Analysis } from "@/lib/types";
 
 const KEY = "wordlens:analysis";
@@ -29,13 +29,13 @@ export function AnalysisProvider({ children }: { children: React.ReactNode }) {
     setReady(true);
   }, []);
 
-  const setAnalysis = (a: Analysis | null) => {
+  const setAnalysis = useCallback((a: Analysis | null) => {
     setState(a);
     try {
       if (a) sessionStorage.setItem(KEY, JSON.stringify(a));
       else sessionStorage.removeItem(KEY);
     } catch {}
-  };
+  }, []);
 
   return (
     <AnalysisContext.Provider value={{ analysis, ready, setAnalysis }}>

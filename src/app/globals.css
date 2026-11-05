@@ -1,5 +1,68 @@
 @import "tailwindcss";
 
+:root {
+  --background: hsl(210 40% 98%);
+  --foreground: hsl(222 47% 11%);
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(222 47% 11%);
+  --popover: hsl(0 0% 100%);
+  --popover-foreground: hsl(222 47% 11%);
+  --primary: hsl(239 70% 56%);
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(220 25% 95%);
+  --secondary-foreground: hsl(222 47% 16%);
+  --muted: hsl(220 25% 95%);
+  --muted-foreground: hsl(220 10% 45%);
+  --accent: hsl(235 80% 96%);
+  --accent-foreground: hsl(239 65% 42%);
+  --destructive: hsl(0 72% 51%);
+  --destructive-foreground: hsl(0 0% 100%);
+  --border: hsl(220 18% 89%);
+  --input: hsl(220 18% 86%);
+  --ring: hsl(239 70% 56%);
+  --radius: 0.75rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
 html {
   color-scheme: light;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 50% -18rem, hsl(239 90% 94% / 0.7), transparent 42rem),
+    var(--background);
+  color: var(--foreground);
+}
+
+::selection {
+  background: hsl(239 70% 56% / 0.16);
+  color: var(--foreground);
 }

@@ -1,5 +1,9 @@
+"use client";
+
+import { useEffect } from "react";
 import Link from "next/link";
-import { Lock } from "lucide-react";
+import { LockKeyhole } from "lucide-react";
+import WordDetail from "@/components/WordDetail";
 import type { WordEntry } from "@/lib/types";
 
 type Props = {
@@ -11,50 +15,69 @@ type Props = {
 };
 
 export default function WordList({ words, unlocked, selected, onSelect, lockedTotal }: Props) {
+  useEffect(() => {
+    if (!selected) return;
+    document
+      .getElementById(`word-${selected}`)
+      ?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }, [selected]);
+
   return (
     <div className="space-y-3">
       {words.length === 0 && (
-        <p className="rounded-xl border border-slate-200 bg-white px-4 py-6 text-center text-sm text-slate-400">
+        <p className="rounded-xl border border-border bg-background px-4 py-6 text-center text-sm text-muted-foreground">
           No uncommon words
         </p>
       )}
 
       {words.map((w) =>
         unlocked.has(w.word) ? (
-          <button
+          <div
             key={w.word}
-            onClick={() => onSelect(w.word)}
-            className={`flex w-full items-center justify-between rounded-xl border px-4 py-3 text-left transition ${
+            id={`word-${w.word}`}
+            className={`overflow-hidden rounded-2xl border bg-card transition-colors ${
               selected === w.word
-                ? "border-amber-400 bg-amber-50"
-                : "border-slate-200 bg-white hover:border-slate-300"
+                ? "border-primary/30 bg-accent/50 shadow-sm"
+                : "border-border/80 hover:border-primary/25 hover:shadow-sm"
             }`}
           >
-            <span className="font-medium capitalize">{w.word}</span>
-            <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-500">
-              {w.count}
-            </span>
-          </button>
+            <button
+              onClick={() => onSelect(w.word)}
+              aria-expanded={selected === w.word}
+              className="flex w-full items-center justify-between gap-3 px-4 py-3.5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+            >
+              <span className="font-medium capitalize text-foreground">{w.word}</span>
+              <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
+                {w.count}
+              </span>
+            </button>
+
+            {selected === w.word && (
+              <div className="border-t border-border/70 px-4 py-4">
+                <WordDetail word={w.word} />
+              </div>
+            )}
+          </div>
         ) : (
           <div
             key={w.word}
-            className="flex items-center justify-between rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-3 text-slate-400"
+            className="flex items-center justify-between rounded-xl border border-dashed border-border bg-muted/60 px-4 py-3 text-muted-foreground"
           >
             <span className="select-none tracking-widest">••••••</span>
-            <Lock className="h-4 w-4" />
+            <LockKeyhole className="h-4 w-4" />
           </div>
         )
       )}
 
       {lockedTotal > 0 && (
-        <div className="rounded-2xl border border-indigo-100 bg-indigo-50 p-5 text-center">
-          <Lock className="mx-auto h-5 w-5 text-indigo-600" />
-          <p className="mt-2 text-sm font-medium text-indigo-900">{lockedTotal} more words</p>
+        <div className="rounded-2xl border border-primary/15 bg-accent/70 p-5 text-center">
+          <LockKeyhole className="mx-auto h-5 w-5 text-primary" />
+          <p className="mt-2 text-sm font-semibold text-foreground">{lockedTotal} more words to discover</p>
           <Link
             href="/login?next=/results"
-            className="mt-3 inline-block rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700"
+            className="mt-3 inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
-            Please log in
+            Create a free account
           </Link>
         </div>
       )}

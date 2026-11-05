@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import WordExtractor from "word-extractor";
 
-export const runtime = "nodejs";
-
 export async function POST(req: Request) {
   try {
     const form = await req.formData();
