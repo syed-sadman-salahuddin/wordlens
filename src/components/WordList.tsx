@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { LockKeyhole } from "lucide-react";
 import WordDetail from "@/components/WordDetail";
+import WordLookup from "@/components/WordLookup";
 import type { WordEntry } from "@/lib/types";
 
 type Props = {
@@ -81,6 +82,8 @@ export default function WordList({ words, unlocked, selected, onSelect, lockedTo
           </Link>
         </div>
       )}
+
+      <WordLookup />
     </div>
   );
 }

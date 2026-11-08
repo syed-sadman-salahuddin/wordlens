@@ -3,7 +3,7 @@ import common from "./commonWords.json";
 import type { Analysis, Mark, PageData, WordEntry } from "@/lib/types";
 
 const EXTRA =
-  "cannot ours hers theirs eleven thirteen fourteen sixteen seventeen eighteen nineteen sixty seventy eighty ninety monday tuesday wednesday thursday friday saturday sunday january february april june july august september october november december".split(
+  "cannot ours hers theirs eleven thirteen fourteen sixteen seventeen eighteen nineteen sixty seventy eighty ninety monday tuesday wednesday thursday friday saturday sunday january february april june july august september october november december further fascinate".split(
     " "
   );
 
@@ -61,6 +61,19 @@ function prevChar(text: string, index: number) {
 
 export function analyze(fileName: string, texts: string[]): Analysis {
   const entries = new Map<string, WordEntry>();
+  const lowercaseWords = new Set<string>();
+
+  for (const text of texts) {
+    const masked = text.replace(NOISE, (m) => " ".repeat(m.length));
+    for (const match of masked.matchAll(TOKEN)) {
+      const token = match[0]
+        .replace(/’/g, "'")
+        .replace(/(?:n't|'s|'re|'ve|'ll|'d|'m)$/i, "");
+      if (token.length >= 3 && /^[a-z]+$/.test(token)) {
+        lowercaseWords.add(token);
+      }
+    }
+  }
 
   const pages: PageData[] = texts.map((text, i) => {
     const masked = text.replace(NOISE, (m) => " ".repeat(m.length));
@@ -77,7 +90,13 @@ export function analyze(fileName: string, texts: string[]): Analysis {
       if (/[A-Z]/.test(token)) {
         const prev = prevChar(text, start);
         const sentenceStart = prev === "" || SENTENCE_START.has(prev);
-        if (!/^[A-Z][a-z]+$/.test(token) || !sentenceStart) continue;
+        if (
+          !/^[A-Z][a-z]+$/.test(token) ||
+          !sentenceStart ||
+          !lowercaseWords.has(token.toLowerCase())
+        ) {
+          continue;
+        }
       }
 
       const word = token.toLowerCase();

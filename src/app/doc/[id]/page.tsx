@@ -21,7 +21,12 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import type { Definition } from "@/lib/types";
 
-type Meta = { fileName: string; pageCount: number; wordCount: number; createdAt?: Timestamp };
+type Meta = {
+  fileName: string;
+  pageCount: number;
+  wordCount: number;
+  createdAt?: Timestamp;
+};
 type Saved = Definition & { word: string; count: number; pages: number[] };
 
 const pageLabel = (pages: number[]) =>

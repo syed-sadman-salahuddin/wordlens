@@ -60,7 +60,16 @@ export default function ProfilePage() {
     Promise.all([getDoc(doc(db, "users", user.uid)), getDocs(docsQuery)])
       .then(([p, d]) => {
         setProfile(p.exists() ? (p.data() as Profile) : null);
-        setItems(d.docs.map((x) => ({ id: x.id, ...(x.data() as Omit<Item, "id">) })));
+        const seenNames = new Set<string>();
+        const documents = d.docs
+          .map((x) => ({ id: x.id, ...(x.data() as Omit<Item, "id">) }))
+          .filter((item) => {
+            const name = item.fileName.trim().toLowerCase();
+            if (seenNames.has(name)) return false;
+            seenNames.add(name);
+            return true;
+          });
+        setItems(documents);
       })
       .catch(() => {
         setProfile(null);

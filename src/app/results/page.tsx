@@ -52,7 +52,11 @@ export default function ResultsPage() {
   }, [ready, analysis, router]);
 
   useEffect(() => {
-    if (analysis && user && !analysis.savedId) save();
+    if (!analysis || !user || analysis.savedId) return;
+    const timer = window.setTimeout(() => {
+      void save();
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, [analysis, user, save]);
 
   useEffect(() => {

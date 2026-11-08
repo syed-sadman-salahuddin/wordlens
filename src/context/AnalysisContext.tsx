@@ -22,11 +22,17 @@ export function AnalysisProvider({ children }: { children: React.ReactNode }) {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    let restored: Analysis | null = null;
     try {
       const raw = sessionStorage.getItem(KEY);
-      if (raw) setState(JSON.parse(raw));
+      if (raw) restored = JSON.parse(raw) as Analysis;
     } catch {}
-    setReady(true);
+
+    const timer = window.setTimeout(() => {
+      if (restored) setState(restored);
+      setReady(true);
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, []);
 
   const setAnalysis = useCallback((a: Analysis | null) => {

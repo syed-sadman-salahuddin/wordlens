@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { BookOpenText, LogIn, LogOut, UserRound } from "lucide-react";
+import { BookOpenText, House, LogIn, LogOut, UserRound } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 
@@ -19,16 +19,38 @@ export default function Navbar() {
         </Link>
 
         {!loading && (
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1 rounded-2xl border border-border/70 bg-card/80 p-1 shadow-sm">
             {user ? (
               <>
-                <Button asChild variant="ghost" size="sm">
-                  <Link href="/profile" className="gap-2">
+                <Button
+                  asChild
+                  variant="ghost"
+                  size="sm"
+                  className="gap-2 rounded-xl px-2.5 hover:bg-primary/10 hover:text-primary sm:px-3"
+                >
+                  <Link href="/" aria-label="Home">
+                    <House className="h-4 w-4" />
+                    <span className="hidden sm:inline">Home</span>
+                  </Link>
+                </Button>
+                <Button
+                  asChild
+                  variant="ghost"
+                  size="sm"
+                  className="gap-2 rounded-xl px-2.5 hover:bg-primary/10 hover:text-primary sm:px-3"
+                >
+                  <Link href="/profile" aria-label="Profile">
                     <UserRound className="h-4 w-4" />
                     <span className="hidden sm:inline">Profile</span>
                   </Link>
                 </Button>
-                <Button variant="ghost" size="sm" onClick={logout} className="gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={logout}
+                  aria-label="Log out"
+                  className="gap-2 rounded-xl px-2.5 text-destructive hover:bg-destructive/10 hover:text-destructive sm:px-3"
+                >
                   <LogOut className="h-4 w-4" />
                   <span className="hidden sm:inline">Log out</span>
                 </Button>
