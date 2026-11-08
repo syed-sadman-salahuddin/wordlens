@@ -83,27 +83,27 @@ NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 
 ```text
 src/
-├── app/                 # Next.js App Router pages & API routes
-│   ├── api/define/route.ts      # Dictionary & synonyms API
-│   ├── api/doc/[id]/page.tsx    # Document detail page
-│   ├── login/page.tsx           # Auth page
-│   ├── results/page.tsx         # Scan results page
-│   ├── scan/page.tsx            # OCR scan page
-│   └── profile/page.tsx         # User profile
-├── components/          # Reusable UI components
+├── app/                 
+│   ├── api/define/route.ts      
+│   ├── api/doc/[id]/page.tsx    
+│   ├── login/page.tsx          
+│   ├── results/page.tsx        
+│   ├── scan/page.tsx           
+│   └── profile/page.tsx         
+├── components/          
 │   ├── ScanCard.tsx
 │   ├── WordList.tsx
 │   ├── WordDetail.tsx
 │   ├── DefinitionView.tsx
 │   └── UploadCard.tsx
-├── context/             # React context (Auth, Analysis)
-├── lib/                 # Core logic
-│   ├── define.ts               # Dictionary fetch with caching
-│   ├── saveAnalysis.ts         # Firestore save logic
-│   ├── extract/ocr.ts          # tesseract.js OCR pipeline
-│   ├── words/findUncommon.ts   # Common/uncommon word filtering
-│   └── words/commonWords.json  # Built-in common word list
-└── types/               # TypeScript type definitions
+├── context/           
+├── lib/                 
+│   ├── define.ts               
+│   ├── saveAnalysis.ts        
+│   ├── extract/ocr.ts          
+│   ├── words/findUncommon.ts  
+│   └── words/commonWords.json  
+└── types/               
 
 ```
 
