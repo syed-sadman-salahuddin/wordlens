@@ -1,8 +1,6 @@
 # WordLens
 
-**WordLens** scans printed pages using in-browser OCR and highlights uncommon words, showing their definitions, pronunciation, and synonyms.
-
-Capture or upload page images, and the app extracts the text, filters out common words, and lets you explore difficult vocabulary page by page.
+**WordLens** scans printed pages using in-browser OCR and highlights uncommon words, showing their definitions, pronunciation, and synonyms. Capture or upload page images, and the app extracts the text, filters out common words, and lets user explore difficult vocabulary page by page.
 
 ---
 
