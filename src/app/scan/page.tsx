@@ -26,7 +26,7 @@ import {
 type Shot = { id: string; blob: Blob; url: string };
 
 const MAX_SHOTS = 20;
-const NO_TEXT = "No readable text found";
+const UNCLEAR_TEXT = "The text is too blurry to read. Try a sharper, closer image.";
 
 export default function ScanPage() {
   const router = useRouter();
@@ -118,7 +118,7 @@ export default function ScanPage() {
         shots.map((s) => s.blob),
         setProgress
       );
-      if (pages.join("").trim().length < 20) throw new Error(NO_TEXT);
+      if (pages.some((page) => page.length < 20)) throw new Error(UNCLEAR_TEXT);
       const date = new Date().toLocaleDateString("en-GB", {
         day: "numeric",
         month: "short",
@@ -128,8 +128,8 @@ export default function ScanPage() {
       router.push("/results");
     } catch (err) {
       setError(
-        err instanceof Error && err.message === NO_TEXT
-          ? NO_TEXT
+        err instanceof Error && err.message === UNCLEAR_TEXT
+          ? UNCLEAR_TEXT
           : "Scan failed. Check your connection and try again"
       );
     } finally {

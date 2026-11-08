@@ -74,7 +74,7 @@ export default function ProfilePage() {
       .catch(() => {
         setProfile(null);
         setItems([]);
-      });
+       });
   }, [user]);
 
   if (loading || !user || profile === undefined || items === undefined) {
